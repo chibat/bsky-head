@@ -72,7 +72,7 @@ app.get("/p/:account", async (c) => {
             <ul>
               <li>
                 {
-                  <a href={item.link}>
+                  <a target="_blank" href={item.link}>
                     {new Date(Date.parse(item.pubDate)).toISOString().replace(
                       ":00.000Z",
                       "",
