@@ -27,15 +27,16 @@ app.get("/p/:account", async (c) => {
   }
   const res = await fetch(`https://bsky.app/profile/${account}/rss`);
   if (res.status === 404 || res.status === 400) {
-    return c.text(res.statusText, {status: res.status});
+    return c.text(res.statusText, { status: res.status });
   }
   const text = await res.text();
   const rss = parse(text).rss as any;
   const items = rss.channel.item as Item[];
   if (!items) {
-    return  c.text("Not Found", {status: 404});
+    return c.text("Not Found", { status: 404 });
   }
   const description = { __html: autolink(rss.channel.description) };
+  const listOnly = c.req.query("listOnly");
   return c.html(
     <html>
       <head>
@@ -52,14 +53,18 @@ app.get("/p/:account", async (c) => {
         <title>bsky-head - {rss.channel.title}</title>
       </head>
       <body>
-        <div class="terminal-nav">
-          <header class="terminal-logo">
-            <div class="logo terminal-prompt">
-              <a href={rss.channel.link} target="_blank">{rss.channel.title}</a>
+        {listOnly == null &&
+          <>
+            <div class="terminal-nav">
+              <header class="terminal-logo">
+                <div class="logo terminal-prompt">
+                  <a href={rss.channel.link} target="_blank">{rss.channel.title}</a>
+                </div>
+              </header>
             </div>
-          </header>
-        </div>
-        <div dangerouslySetInnerHTML={description}></div>
+            <div dangerouslySetInnerHTML={description}></div>
+          </>
+        }
         {items.map((item) => {
           const __html = autolink(item.description);
           const inner = { __html };
@@ -100,7 +105,7 @@ app.get("/p/:account", async (c) => {
       <body>
         <div class="container">
           <div class="terminal-nav">
-              <div class="logo">bsky-head</div>
+            <div class="logo">bsky-head</div>
           </div>
           <form onsubmit="location.href = '/p/' + document.getElementById('input').value; return false;">
             <input id="input" type="text" placeholder="bluesky account" autofocus />
