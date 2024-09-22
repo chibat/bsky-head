@@ -1,0 +1,14 @@
+{
+  "imports": {
+    "@libs/xml": "jsr:@libs/xml@^5.4.16",
+    "@std/html": "jsr:@std/html@^1.0.3",
+    "hono": "jsr:@hono/hono@^4.6.2"
+  },
+  "tasks": {
+    "start": "deno run --watch -R -N=bsky.app,:8000 main.tsx"
+  },
+  "compilerOptions": {
+    "jsx": "precompile",
+    "jsxImportSource": "hono/jsx"
+  }
+}

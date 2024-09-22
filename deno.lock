@@ -1,0 +1,36 @@
+{
+  "version": "3",
+  "packages": {
+    "specifiers": {
+      "jsr:@hono/hono@^4.6.2": "jsr:@hono/hono@4.6.2",
+      "jsr:@libs/typing@2": "jsr:@libs/typing@2.9.0",
+      "jsr:@libs/xml@^5.4.16": "jsr:@libs/xml@5.4.16",
+      "jsr:@std/html@^1.0.3": "jsr:@std/html@1.0.3"
+    },
+    "jsr": {
+      "@hono/hono@4.6.2": {
+        "integrity": "35fcf3be4687825080b01bed7bbe2ac66f8d8b8939f0bad459661bf3b46d916f"
+      },
+      "@libs/typing@2.9.0": {
+        "integrity": "ddf35ea652b807cd9b19b4f3f163fb5d76d57299053753fbd01ba8b02d9306ad"
+      },
+      "@libs/xml@5.4.16": {
+        "integrity": "6537b916340343261317a9f81693539a01e8530bc9896a6bbaa72d3a3cba798a",
+        "dependencies": [
+          "jsr:@libs/typing@2"
+        ]
+      },
+      "@std/html@1.0.3": {
+        "integrity": "7a0ac35e050431fb49d44e61c8b8aac1ebd55937e0dc9ec6409aa4bab39a7988"
+      }
+    }
+  },
+  "remote": {},
+  "workspace": {
+    "dependencies": [
+      "jsr:@hono/hono@^4.6.2",
+      "jsr:@libs/xml@^5.4.16",
+      "jsr:@std/html@^1.0.3"
+    ]
+  }
+}

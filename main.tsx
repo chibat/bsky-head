@@ -1,0 +1,52 @@
+import { Hono } from 'hono'
+import { serveStatic } from 'hono/deno'
+import { parse } from "@libs/xml";
+import { escape } from "@std/html/entities";
+
+type Item = { link: any; pubDate: string; description: string };
+
+function autolink(text: string): string {
+  text = escape(text.replaceAll("&#xA;", " "));
+  const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+  return text.replace(urlRegex, (match) => `<a href="${match}" target="_blank">${match}</a>`);
+}
+
+const app = new Hono();
+app.use('/static/*', serveStatic({ root: './' }));
+app.get('/p/:account', async (c) => {
+  const account = c.req.param("account");
+  const res = await fetch(`https://bsky.app/profile/${account}/rss`);
+  const text = await res.text();
+  const rss = parse(text).rss as any;
+  const items = rss.channel.item as Item[];
+  const description = { __html: autolink(rss.channel.description) };
+  return c.html(
+    <html>
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="stylesheet" href="https://unpkg.com/terminal.css@0.7.4/dist/terminal.min.css" />
+        <link rel="stylesheet" href="/static/style.css" />
+        <title>{rss.channel.title}</title>
+      </head>
+      <body>
+        <div class="terminal-nav">
+          <header class="terminal-logo">
+            <div class="logo terminal-prompt">
+              <a href={rss.channel.link} target="_blank">{rss.channel.title}</a>
+            </div>
+          </header>
+        </div>
+        <div dangerouslySetInnerHTML={description}></div>
+        {items.map(item => {
+          const __html = autolink(item.description);
+          const inner = { __html }
+          return <ul><li>{<a href={item.link}>{new Date(Date.parse(item.pubDate)).toISOString().replace(":00.000Z", "")}</a>} <span dangerouslySetInnerHTML={inner}></span></li></ul>
+        })
+        }
+      </body>
+    </html>);
+});
+
+Deno.serve(app.fetch)
+
