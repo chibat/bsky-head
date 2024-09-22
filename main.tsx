@@ -22,7 +22,7 @@ const app = new Hono();
 app.use("/static/*", serveStatic({ root: "./" }));
 app.get("/p/:account", async (c) => {
   let account = c.req.param("account");
-  if (!account.includes(".")) {
+  if (!account.includes(".") && !account.includes(":")) {
     account = `${account}.bsky.social`;
   }
   const res = await fetch(`https://bsky.app/profile/${account}/rss`);
