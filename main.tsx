@@ -100,9 +100,7 @@ app.get("/p/:account", async (c) => {
       <body>
         <div class="container">
           <div class="terminal-nav">
-            <header class="terminal-logo">
-              <div class="logo terminal-prompt">bsky-head</div>
-            </header>
+              <div class="logo">bsky-head</div>
           </div>
           <form onsubmit="location.href = '/p/' + document.getElementById('input').value; return false;">
             <input id="input" type="text" placeholder="bluesky account" autofocus />
