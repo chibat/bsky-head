@@ -10,11 +10,17 @@ function autolink(text: string): string {
     return "";
   }
   text = escape(text.replaceAll("&#xA;", " "));
-  const urlRegex =
-    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+  const urlRegex = /((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))/g;
+
   return text.replace(
     urlRegex,
-    (match) => `<a href="${match}" target="_blank">${match}</a>`,
+    (match, p1) => {
+      const url = p1.startsWith('http') ? p1 : `https://${p1}`;
+      if (URL.canParse(url)) {
+        return `<a href="${url}" target="_blank">${match}</a>`;
+      }
+      return p1;
+    }
   );
 }
 
