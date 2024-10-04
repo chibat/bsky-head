@@ -5,7 +5,7 @@ import { escape } from "@std/html/entities";
 
 type Item = { link: any; pubDate: string; description: string };
 
-function autolink(text: string): string {
+function linkify(text: string): string {
   if (!text) {
     return "";
   }
@@ -41,7 +41,7 @@ app.get("/p/:account", async (c) => {
   if (!items) {
     return c.text("Not Found", { status: 404 });
   }
-  const description = { __html: autolink(rss.channel.description) };
+  const description = { __html: linkify(rss.channel.description) };
   const listOnly = c.req.query("listOnly");
   return c.html(
     <html>
@@ -72,7 +72,7 @@ app.get("/p/:account", async (c) => {
           </>
         }
         {items.map((item) => {
-          const __html = autolink(item.description);
+          const __html = linkify(item.description);
           const inner = { __html };
           return (
             <ul>
