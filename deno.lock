@@ -1,36 +1,35 @@
 {
-  "version": "3",
-  "packages": {
-    "specifiers": {
-      "jsr:@hono/hono@^4.6.2": "jsr:@hono/hono@4.6.2",
-      "jsr:@libs/typing@2": "jsr:@libs/typing@2.9.0",
-      "jsr:@libs/xml@^5.4.16": "jsr:@libs/xml@5.4.16",
-      "jsr:@std/html@^1.0.3": "jsr:@std/html@1.0.3"
+  "version": "4",
+  "specifiers": {
+    "jsr:@hono/hono@^4.6.2": "4.6.4",
+    "jsr:@libs/xml@^5.4.16": "5.4.16",
+    "npm:linkify-html@^4.1.3": "4.1.3_linkifyjs@4.1.3"
+  },
+  "jsr": {
+    "@hono/hono@4.6.4": {
+      "integrity": "9bbd937653ab902405af33743561140f8883d27dc730eb9ceac665e2468c8bf6"
     },
-    "jsr": {
-      "@hono/hono@4.6.2": {
-        "integrity": "35fcf3be4687825080b01bed7bbe2ac66f8d8b8939f0bad459661bf3b46d916f"
-      },
-      "@libs/typing@2.9.0": {
-        "integrity": "ddf35ea652b807cd9b19b4f3f163fb5d76d57299053753fbd01ba8b02d9306ad"
-      },
-      "@libs/xml@5.4.16": {
-        "integrity": "6537b916340343261317a9f81693539a01e8530bc9896a6bbaa72d3a3cba798a",
-        "dependencies": [
-          "jsr:@libs/typing@2"
-        ]
-      },
-      "@std/html@1.0.3": {
-        "integrity": "7a0ac35e050431fb49d44e61c8b8aac1ebd55937e0dc9ec6409aa4bab39a7988"
-      }
+    "@libs/xml@5.4.16": {
+      "integrity": "6537b916340343261317a9f81693539a01e8530bc9896a6bbaa72d3a3cba798a"
     }
   },
-  "remote": {},
+  "npm": {
+    "linkify-html@4.1.3_linkifyjs@4.1.3": {
+      "integrity": "sha512-Ejb8X/pOxB4IVqG1U37tnF85UW3JtX+eHudH3zlZ2pODz2e/J7zQ/vj+VDWffwhTecJqdRehhluwrRmKoJz+iQ==",
+      "dependencies": [
+        "linkifyjs"
+      ]
+    },
+    "linkifyjs@4.1.3": {
+      "integrity": "sha512-auMesunaJ8yfkHvK4gfg1K0SaKX/6Wn9g2Aac/NwX+l5VdmFZzo/hdPGxEOETj+ryRa4/fiOPjeeKURSAJx1sg=="
+    }
+  },
   "workspace": {
     "dependencies": [
       "jsr:@hono/hono@^4.6.2",
       "jsr:@libs/xml@^5.4.16",
-      "jsr:@std/html@^1.0.3"
+      "jsr:@std/html@^1.0.3",
+      "npm:linkify-html@^4.1.3"
     ]
   }
 }

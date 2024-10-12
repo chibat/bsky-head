@@ -1,27 +1,22 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
 import { parse } from "@libs/xml";
-import { escape } from "@std/html/entities";
 
-type Item = { link: any; pubDate: string; description: string };
+import linkifyHtml from "linkify-html";
+
+type Item = { link: string; pubDate: string; description: string };
+
+const urlRegex =
+  /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
 
 function linkify(text: string): string {
-  if (!text) {
-    return "";
-  }
-  text = escape(text.replaceAll("&#xA;", " "));
-  const urlRegex = /((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))/g;
-
-  return text.replace(
-    urlRegex,
-    (match, p1) => {
-      const url = p1.startsWith('http') ? p1 : `https://${p1}`;
-      if (URL.canParse(url)) {
-        return `<a href="${url}" target="_blank">${match}</a>`;
-      }
-      return p1;
-    }
-  );
+  return linkifyHtml(text, {
+    target: "_blank",
+    defaultProtocol: "https",
+    validate: {
+      url: (value) => urlRegex.test(value),
+    },
+  });
 }
 
 const app = new Hono();
@@ -36,6 +31,7 @@ app.get("/p/:account", async (c) => {
     return c.text(res.statusText, { status: res.status });
   }
   const text = await res.text();
+  // deno-lint-ignore no-explicit-any
   const rss = parse(text).rss as any;
   const items = rss.channel.item as Item[];
   if (!items) {
@@ -60,17 +56,20 @@ app.get("/p/:account", async (c) => {
       </head>
       <body>
         {listOnly == null &&
-          <>
-            <div class="terminal-nav">
-              <header class="terminal-logo">
-                <div class="logo terminal-prompt">
-                  <a href={rss.channel.link} target="_blank">{rss.channel.title}</a>
-                </div>
-              </header>
-            </div>
-            <div dangerouslySetInnerHTML={description}></div>
-          </>
-        }
+          (
+            <>
+              <div class="terminal-nav">
+                <header class="terminal-logo">
+                  <div class="logo terminal-prompt">
+                    <a href={rss.channel.link} target="_blank">
+                      {rss.channel.title}
+                    </a>
+                  </div>
+                </header>
+              </div>
+              <div dangerouslySetInnerHTML={description}></div>
+            </>
+          )}
         {items.map((item) => {
           const __html = linkify(item.description);
           const inner = { __html };
@@ -92,7 +91,7 @@ app.get("/p/:account", async (c) => {
       </body>
     </html>,
   );
-}).get("/", async (c) => {
+}).get("/", (c) => {
   return c.html(
     <html>
       <head>
@@ -114,11 +113,16 @@ app.get("/p/:account", async (c) => {
             <div class="logo">bsky-head</div>
           </div>
           <form onsubmit="location.href = '/p/' + document.getElementById('input').value; return false;">
-            <input id="input" type="text" placeholder="bluesky account" autofocus />
+            <input
+              id="input"
+              type="text"
+              placeholder="bluesky account"
+              autofocus
+            />
           </form>
         </div>
       </body>
-    </html>
+    </html>,
   );
 });
 
