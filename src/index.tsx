@@ -1,7 +1,5 @@
 import { Hono } from "hono";
-import { serveStatic } from "hono/deno";
 import { parse } from "@libs/xml";
-
 import linkifyHtml from "linkify-html";
 
 type Item = { link: string; pubDate: string; description: string };
@@ -19,8 +17,7 @@ function linkify(text: string): string {
   });
 }
 
-const app = new Hono();
-app.use("/static/*", serveStatic({ root: "./" }));
+const app = new Hono<{Bindings: CloudflareBindings}>();
 app.get("/p/:account", async (c) => {
   let account = c.req.param("account");
   if (!account.includes(".") && !account.includes(":")) {
@@ -51,7 +48,7 @@ app.get("/p/:account", async (c) => {
           rel="stylesheet"
           href="https://unpkg.com/terminal.css@0.7.4/dist/terminal.min.css"
         />
-        <link rel="stylesheet" href="/static/style.css" />
+        <link rel="stylesheet" href="/style.css" />
         <title>bsky-head - {rss.channel.title}</title>
       </head>
       <body>
@@ -104,7 +101,7 @@ app.get("/p/:account", async (c) => {
           rel="stylesheet"
           href="https://unpkg.com/terminal.css@0.7.4/dist/terminal.min.css"
         />
-        <link rel="stylesheet" href="/static/style.css" />
+        <link rel="stylesheet" href="/style.css" />
         <title>bsky-head</title>
       </head>
       <body>
@@ -126,4 +123,4 @@ app.get("/p/:account", async (c) => {
   );
 });
 
-Deno.serve(app.fetch);
+export default app
