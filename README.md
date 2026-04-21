@@ -16,10 +16,10 @@ ex: http://localhost:8000/p/bsky.app
 ## Deno Deploy
 
 ```
-https://bsky-head.deno.dev/p/${BLUESKY_ACCOUNT}
+https://bsky-head.chibat.workers.dev/p/${BLUESKY_ACCOUNT}
 ```
 
-ex: https://bsky-head.deno.dev/p/bsky.app
+ex: https://bsky-head.chibat.workers.dev/p/bsky.app
 
 ---
 
