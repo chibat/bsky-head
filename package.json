@@ -1,0 +1,19 @@
+{
+  "name": "bsky-head",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "login": "wrangler login --no-browser",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+  },
+  "dependencies": {
+    "@libs/xml": "npm:@jsr/libs__xml@^7.0.4",
+    "hono": "^4.12.14",
+    "linkify-html": "^4.3.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260421.1",
+    "wrangler": "^4.4.0"
+  }
+}
